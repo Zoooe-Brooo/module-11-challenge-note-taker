@@ -14,14 +14,14 @@ notes.get('/', (req, res) => {
 });
 
 // GET Route for a specific note
-notes.get('/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
+notes.get('/:id', (req, res) => {
+  const noteId = req.params.id;
   readFile('./db/db.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json('Error reading file');
     } else {
       const notesArray = JSON.parse(data);
-      const result = notesArray.filter((note) => note.note_id === noteId);
+      const result = notesArray.filter((note) => note.id === noteId);
       return result.length > 0
         ? res.json(result)
         : res.json('No note with that ID');
@@ -30,8 +30,8 @@ notes.get('/:note_id', (req, res) => {
 });
 
 // DELETE Route for a specific note
-notes.delete('/:note_id', (req, res) => {
-  const noteId = req.params.note_id;
+notes.delete('/:id', (req, res) => {
+  const noteId = req.params.id;
   readFile('./db/db.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json('Error reading file');
@@ -46,7 +46,7 @@ notes.delete('/:note_id', (req, res) => {
       return;
     }
 
-    const newNotesArray = notesArray.filter((note) => note.note_id !== noteId);
+    const newNotesArray = notesArray.filter((note) => note.id !== noteId);
 
     writeFile('./db/db.json', JSON.stringify(newNotesArray, null, 2), (err) => {
       if (err) {
@@ -71,7 +71,7 @@ notes.post('/', (req, res) => {
   const newNote = {
     title,
     text,
-    note_id: uuidv4(),
+    id: uuidv4(),
   };
     
   readFile('./db/db.json', 'utf8', (err, data) => {
