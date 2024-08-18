@@ -13,50 +13,50 @@ notes.get('/', (req, res) => {
   });
 });
 
-// // GET Route for a specific note
-// notes.get('/:note_id', (req, res) => {
-//   const noteId = req.params.note_id;
-//   readFile('./db/db.json', 'utf8', (err, data) => {
-//     if (err) {
-//       res.status(500).json('Error reading file');
-//     } else {
-//       const notesArray = JSON.parse(data);
-//       const result = notesArray.filter((note) => note.note_id === noteId);
-//       return result.length > 0
-//         ? res.json(result)
-//         : res.json('No note with that ID');
-//     }
-//   });
-// });
+// GET Route for a specific note
+notes.get('/:note_id', (req, res) => {
+  const noteId = req.params.note_id;
+  readFile('./db/db.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json('Error reading file');
+    } else {
+      const notesArray = JSON.parse(data);
+      const result = notesArray.filter((note) => note.note_id === noteId);
+      return result.length > 0
+        ? res.json(result)
+        : res.json('No note with that ID');
+    }
+  });
+});
 
-// // DELETE Route for a specific note
-// notes.delete('/:note_id', (req, res) => {
-//   const noteId = req.params.note_id;
-//   readFile('./db/db.json', 'utf8', (err, data) => {
-//     if (err) {
-//       res.status(500).json('Error reading file');
-//       return;
-//     }
+// DELETE Route for a specific note
+notes.delete('/:note_id', (req, res) => {
+  const noteId = req.params.note_id;
+  readFile('./db/db.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json('Error reading file');
+      return;
+    }
 
-//     let notesArray;
-//     try {
-//       notesArray = JSON.parse(data);
-//     } catch (parseErr) {
-//       res.status(500).json('Error parsing JSON data');
-//       return;
-//     }
+    let notesArray;
+    try {
+      notesArray = JSON.parse(data);
+    } catch (parseErr) {
+      res.status(500).json('Error parsing JSON data');
+      return;
+    }
 
-//     const newNotesArray = notesArray.filter((note) => note.note_id !== noteId);
+    const newNotesArray = notesArray.filter((note) => note.note_id !== noteId);
 
-//     writeFile('./db/db.json', JSON.stringify(newNotesArray, null, 2), (err) => {
-//       if (err) {
-//         res.status(500).json('Error writing file');
-//       } else {
-//         res.json('Note deleted successfully');
-//       }
-//     });
-//   });
-// });
+    writeFile('./db/db.json', JSON.stringify(newNotesArray, null, 2), (err) => {
+      if (err) {
+        res.status(500).json('Error writing file');
+      } else {
+        res.json('Note deleted successfully');
+      }
+    });
+  });
+});
 
 // POST Route for creating a new note
 notes.post('/', (req, res) => {
