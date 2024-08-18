@@ -4,7 +4,7 @@ const { v4: uuidv4 } = require('uuid');
 
 // GET Route for retrieving all notes
 notes.get('/', (req, res) => {
-  readFile('./db/db.json', 'utf8', (err, data) => {
+  readFile('../db/db.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json('Error reading file');
     } else {
@@ -16,7 +16,7 @@ notes.get('/', (req, res) => {
 // GET Route for a specific note
 notes.get('/:note_id', (req, res) => {
   const noteId = req.params.note_id;
-  readFile('./db/db.json', 'utf8', (err, data) => {
+  readFile('../db/db.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json('Error reading file');
     } else {
@@ -26,6 +26,35 @@ notes.get('/:note_id', (req, res) => {
         ? res.json(result)
         : res.json('No note with that ID');
     }
+  });
+});
+
+// DELETE Route for a specific note
+notes.delete('/:note_id', (req, res) => {
+  const noteId = req.params.note_id;
+  readFile('../db/db.json', 'utf8', (err, data) => {
+    if (err) {
+      res.status(500).json('Error reading file');
+      return;
+    }
+
+    let notesArray;
+    try {
+      notesArray = JSON.parse(data);
+    } catch (parseErr) {
+      res.status(500).json('Error parsing JSON data');
+      return;
+    }
+
+    const newNotesArray = notesArray.filter((note) => note.note_id !== noteId);
+
+    writeFile('../db/db.json', JSON.stringify(newNotesArray, null, 2), (err) => {
+      if (err) {
+        res.status(500).json('Error writing file');
+      } else {
+        res.json('Note deleted successfully');
+      }
+    });
   });
 });
 
@@ -45,7 +74,7 @@ notes.post('/', (req, res) => {
     note_id: uuidv4(),
   };
     
-  readFile('./db/db.json', 'utf8', (err, data) => {
+  readFile('../db/db.json', 'utf8', (err, data) => {
     if (err) {
       res.status(500).json('Error reading file');
       return;
@@ -61,7 +90,7 @@ notes.post('/', (req, res) => {
 
     notesArray.push(newNote);
 
-    writeFile('./db/db.json', JSON.stringify(notesArray, null, 2), (err) => {
+    writeFile('../db/db.json', JSON.stringify(notesArray, null, 2), (err) => {
       if (err) {
         res.status(500).json('Error writing file');
       } else {
